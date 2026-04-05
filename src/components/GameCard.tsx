@@ -98,10 +98,14 @@ const GameCard = ({ game, isAdmin, onDelete, onEdit, index = 0 }: GameCardProps)
             </p>
           )}
 
-          <div className="flex items-center text-xs text-muted-foreground">
+          <div className="flex items-center text-xs text-muted-foreground gap-3">
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               {format(new Date(game.created_at), "dd MMM yyyy", { locale: ptBR })}
+            </span>
+            <span className="flex items-center gap-1">
+              <Download className="h-3 w-3" />
+              {downloadCount ?? 0}
             </span>
           </div>
 
