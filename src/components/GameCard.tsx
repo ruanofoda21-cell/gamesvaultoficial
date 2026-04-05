@@ -28,6 +28,13 @@ const GameCard = ({ game, isAdmin, onDelete, onEdit, index = 0 }: GameCardProps)
   const isTorrent = game.title.includes("TORRENT");
   const isNew = (Date.now() - new Date(game.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000;
 
+  const { data: downloadCount } = useQuery({
+    queryKey: ["download_count", game.id],
+    queryFn: async () => {
+      const { data } = await supabase.from("download_counts").select("count").eq("game_id", game.id).maybeSingle();
+      return data?.count ?? 0;
+    },
+  });
 
   const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
