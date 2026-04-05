@@ -232,51 +232,6 @@ const Index = () => {
           <FeaturedCarousel games={games} />
         )}
 
-        {/* Recently Added */}
-        {!search && !activeCategory && recentGames.length > 0 && (
-          <section>
-            <h2 className="font-display text-lg font-bold tracking-wider text-foreground flex items-center gap-2 mb-4">
-              <Clock className="h-5 w-5 text-neon-green" />
-              ADICIONADOS RECENTEMENTE
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recentGames.map((game, i) => (
-                <GameCard key={game.id} game={game} isAdmin={isAdmin} onDelete={(id) => deleteMutation.mutate(id)} index={i} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Most Downloaded */}
-        {!search && !activeCategory && mostDownloaded.length > 0 && (
-          <section>
-            <h2 className="font-display text-lg font-bold tracking-wider text-foreground flex items-center gap-2 mb-4">
-              <TrendingUp className="h-5 w-5 text-accent" />
-              MAIS BAIXADOS
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mostDownloaded.map((game, i) => (
-                <GameCard key={game.id} game={game} isAdmin={isAdmin} onDelete={(id) => deleteMutation.mutate(id)} index={i} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Popular Games */}
-        {!search && !activeCategory && popularGames.length > 0 && (
-          <section>
-            <h2 className="font-display text-lg font-bold tracking-wider text-foreground flex items-center gap-2 mb-4">
-              <Flame className="h-5 w-5 text-orange-400" />
-              POPULARES
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {popularGames.map((game, i) => (
-                <GameCard key={game.id} game={game} isAdmin={isAdmin} onDelete={(id) => deleteMutation.mutate(id)} index={i} />
-              ))}
-            </div>
-          </section>
-        )}
-
         {/* Compact Top 5 Ranking */}
         {!search && !activeCategory && popularGames.length > 0 && (
           <section className="neon-card rounded-xl p-5">
@@ -325,6 +280,53 @@ const Index = () => {
             </div>
           </section>
         )}
+
+        {/* Recently Added */}
+        {!search && !activeCategory && recentGames.length > 0 && (
+          <section>
+            <h2 className="font-display text-lg font-bold tracking-wider text-foreground flex items-center gap-2 mb-4">
+              <Clock className="h-5 w-5 text-neon-green" />
+              ADICIONADOS RECENTEMENTE
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {recentGames.map((game, i) => (
+                <GameCard key={game.id} game={game} isAdmin={isAdmin} onDelete={(id) => deleteMutation.mutate(id)} index={i} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Most Downloaded */}
+        {!search && !activeCategory && mostDownloaded.length > 0 && (
+          <section>
+            <h2 className="font-display text-lg font-bold tracking-wider text-foreground flex items-center gap-2 mb-4">
+              <TrendingUp className="h-5 w-5 text-accent" />
+              MAIS BAIXADOS
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mostDownloaded.map((game, i) => (
+                <GameCard key={game.id} game={game} isAdmin={isAdmin} onDelete={(id) => deleteMutation.mutate(id)} index={i} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Popular Games */}
+        {!search && !activeCategory && popularGames.length > 0 && (
+          <section>
+            <h2 className="font-display text-lg font-bold tracking-wider text-foreground flex items-center gap-2 mb-4">
+              <Flame className="h-5 w-5 text-orange-400" />
+              POPULARES
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {popularGames.map((game, i) => (
+                <GameCard key={game.id} game={game} isAdmin={isAdmin} onDelete={(id) => deleteMutation.mutate(id)} index={i} />
+              ))}
+            </div>
+          </section>
+        )}
+
+
 
         {/* All Games / Filtered */}
         <section>
