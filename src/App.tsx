@@ -11,6 +11,8 @@ import GameDetail from "./pages/GameDetail.tsx";
 import Suggestions from "./pages/Suggestions.tsx";
 import Profile from "./pages/Profile.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
+import Ranking from "./pages/Ranking.tsx";
+import Chat from "./pages/Chat.tsx";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/sugestoes" element={<Suggestions />} />
           <Route path="/perfil" element={<Profile />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/ranking" element={<Ranking />} />
+          <Route path="/chat" element={<Chat />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
