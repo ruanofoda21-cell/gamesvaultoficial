@@ -11,6 +11,8 @@ import GameDetail from "./pages/GameDetail.tsx";
 import Suggestions from "./pages/Suggestions.tsx";
 import Profile from "./pages/Profile.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
+import Ranking from "./pages/Ranking.tsx";
+import Chat from "./pages/Chat.tsx";
 
 const queryClient = new QueryClient();
 
