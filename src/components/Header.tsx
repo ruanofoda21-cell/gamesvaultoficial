@@ -1,14 +1,16 @@
-import { Gamepad2, Plus, LogIn, LogOut, MessageSquare } from "lucide-react";
+import { Gamepad2, Plus, LogIn, LogOut, MessageSquare, User, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import SuggestionDialog from "@/components/SuggestionDialog";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Header = () => {
   const { user, signOut } = useAuth();
+  const isAdmin = user?.email === "kkzin107@gamevault.local";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-border glassmorphism">
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
         <Link to="/" className="flex items-center gap-3 group">
           <Gamepad2 className="h-8 w-8 text-primary transition-all group-hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.7)]" />
@@ -17,26 +19,38 @@ const Header = () => {
           </h1>
         </Link>
 
-        <nav className="flex items-center gap-3">
+        <nav className="flex items-center gap-2">
+          <ThemeToggle />
           {user ? (
             <>
-              {user.email === "kkzin107@gamevault.local" && (
+              {isAdmin && (
                 <>
+                  <Link to="/admin">
+                    <Button variant="outline" size="sm" className="gap-2 font-display text-xs tracking-wider border-primary/30 hover:border-primary hover:bg-primary/10">
+                      <BarChart3 className="h-4 w-4" />
+                      <span className="hidden sm:inline">ADMIN</span>
+                    </Button>
+                  </Link>
                   <Link to="/sugestoes">
                     <Button variant="outline" size="sm" className="gap-2 font-display text-xs tracking-wider border-primary/30 hover:border-primary hover:bg-primary/10">
                       <MessageSquare className="h-4 w-4" />
-                      SUGESTÕES
+                      <span className="hidden sm:inline">SUGESTÕES</span>
                     </Button>
                   </Link>
                   <Link to="/novo">
                     <Button size="sm" className="gap-2 font-display text-xs tracking-wider">
                       <Plus className="h-4 w-4" />
-                      POSTAR JOGO
+                      <span className="hidden sm:inline">POSTAR JOGO</span>
                     </Button>
                   </Link>
                 </>
               )}
               <SuggestionDialog />
+              <Link to="/perfil">
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                  <User className="h-4 w-4" />
+                </Button>
+              </Link>
               <Button
                 variant="ghost"
                 size="sm"
