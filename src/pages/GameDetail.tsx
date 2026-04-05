@@ -3,11 +3,17 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import StarRating from "@/components/StarRating";
-import { ArrowLeft, Download, HardDrive, Monitor, Cpu, MemoryStick, Loader2, Calendar, Tag, User, Building } from "lucide-react";
+import CommentSection from "@/components/CommentSection";
+import GameBadge from "@/components/GameBadge";
+import { ArrowLeft, Download, HardDrive, Monitor, Cpu, MemoryStick, Loader2, Calendar, Tag, User, Building, Heart, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useAuth } from "@/hooks/useAuth";
+import { useFavorites } from "@/hooks/useFavorites";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface GameInfo {
   detected_title: string;
@@ -18,33 +24,20 @@ interface GameInfo {
   file_size: string;
   description_full: string;
   screenshots: string[];
-  requirements_min: {
-    os: string;
-    cpu: string;
-    ram: string;
-    gpu: string;
-    storage: string;
-  };
-  requirements_rec: {
-    os: string;
-    cpu: string;
-    ram: string;
-    gpu: string;
-    storage: string;
-  };
+  requirements_min: { os: string; cpu: string; ram: string; gpu: string; storage: string };
+  requirements_rec: { os: string; cpu: string; ram: string; gpu: string; storage: string };
 }
 
 const GameDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const [showTrailer, setShowTrailer] = useState(false);
 
   const { data: game, isLoading: gameLoading } = useQuery({
     queryKey: ["game", id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("games")
-        .select("*")
-        .eq("id", id!)
-        .single();
+      const { data, error } = await supabase.from("games").select("*").eq("id", id!).single();
       if (error) throw error;
       return data;
     },
@@ -54,51 +47,44 @@ const GameDetail = () => {
   const { data: gameInfo, isLoading: infoLoading } = useQuery({
     queryKey: ["game-info", id],
     queryFn: async () => {
-      // First check DB
-      const { data: dbData } = await supabase
-        .from("game_info")
-        .select("*")
-        .eq("game_id", id!)
-        .maybeSingle();
-
+      const { data: dbData } = await supabase.from("game_info").select("*").eq("game_id", id!).maybeSingle();
       if (dbData) {
         return {
-          detected_title: dbData.detected_title,
-          developer: dbData.developer,
-          publisher: dbData.publisher,
-          release_year: dbData.release_year,
-          genre: dbData.genre,
-          file_size: dbData.file_size,
-          description_full: dbData.description_full,
-          screenshots: dbData.screenshots || [],
+          detected_title: dbData.detected_title, developer: dbData.developer, publisher: dbData.publisher,
+          release_year: dbData.release_year, genre: dbData.genre, file_size: dbData.file_size,
+          description_full: dbData.description_full, screenshots: dbData.screenshots || [],
           requirements_min: { os: dbData.req_min_os, cpu: dbData.req_min_cpu, ram: dbData.req_min_ram, gpu: dbData.req_min_gpu, storage: dbData.req_min_storage },
           requirements_rec: { os: dbData.req_rec_os, cpu: dbData.req_rec_cpu, ram: dbData.req_rec_ram, gpu: dbData.req_rec_gpu, storage: dbData.req_rec_storage },
         } as GameInfo;
       }
-
-      // Not in DB — fetch via AI edge function (which also saves it)
       if (!game) return null;
       const { data: aiData, error } = await supabase.functions.invoke("get-game-info", {
         body: { game_id: id, title: game.title, description: game.description },
       });
       if (error) throw error;
       if (!aiData || aiData.error) return null;
-
       return {
-        detected_title: aiData.detected_title,
-        developer: aiData.developer,
-        publisher: aiData.publisher,
-        release_year: aiData.release_year,
-        genre: aiData.genre,
-        file_size: aiData.file_size,
-        description_full: aiData.description_full,
-        screenshots: aiData.screenshots || [],
+        detected_title: aiData.detected_title, developer: aiData.developer, publisher: aiData.publisher,
+        release_year: aiData.release_year, genre: aiData.genre, file_size: aiData.file_size,
+        description_full: aiData.description_full, screenshots: aiData.screenshots || [],
         requirements_min: { os: aiData.req_min_os, cpu: aiData.req_min_cpu, ram: aiData.req_min_ram, gpu: aiData.req_min_gpu, storage: aiData.req_min_storage },
         requirements_rec: { os: aiData.req_rec_os, cpu: aiData.req_rec_cpu, ram: aiData.req_rec_ram, gpu: aiData.req_rec_gpu, storage: aiData.req_rec_storage },
       } as GameInfo;
     },
     enabled: !!id && !gameLoading,
   });
+
+  const handleDownload = async () => {
+    if (id) {
+      try { await supabase.rpc("increment_download", { p_game_id: id }); } catch {}
+    }
+  };
+
+  // Extract YouTube video ID from trailer_url
+  const getYouTubeId = (url: string) => {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?#]+)/);
+    return match?.[1] || null;
+  };
 
   if (gameLoading) {
     return (
@@ -117,15 +103,16 @@ const GameDetail = () => {
         <Header />
         <div className="container mx-auto px-4 py-16 text-center">
           <p className="text-muted-foreground">Jogo não encontrado.</p>
-          <Link to="/">
-            <Button variant="outline" className="mt-4 gap-2">
-              <ArrowLeft className="h-4 w-4" /> Voltar
-            </Button>
-          </Link>
+          <Link to="/"><Button variant="outline" className="mt-4 gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button></Link>
         </div>
       </div>
     );
   }
+
+  const isTorrent = game.title.includes("TORRENT");
+  const cleanTitle = game.title.replace(/🟩TORRENT🟩/g, "").replace(/🟩/g, "").trim();
+  const trailerUrl = (game as any).trailer_url;
+  const youtubeId = trailerUrl ? getYouTubeId(trailerUrl) : null;
 
   return (
     <div className="min-h-screen">
@@ -135,11 +122,7 @@ const GameDetail = () => {
       <div className="relative">
         {game.image_url && (
           <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden">
-            <img
-              src={game.image_url}
-              alt={game.title}
-              className="w-full h-full object-cover"
-            />
+            <img src={game.image_url} alt={game.title} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
           </div>
         )}
@@ -151,9 +134,12 @@ const GameDetail = () => {
 
           <div className="flex flex-col sm:flex-row gap-6 items-start">
             <div className="flex-1 space-y-3">
-              <h1 className="font-display text-3xl md:text-4xl font-black tracking-wider text-foreground">
-                {game.title}
-              </h1>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="font-display text-3xl md:text-4xl font-black tracking-wider text-foreground">
+                  {cleanTitle}
+                </h1>
+                {isTorrent && <GameBadge type="torrent" />}
+              </div>
 
               <div className="flex flex-wrap items-center gap-3">
                 {game.category && (
@@ -170,21 +156,51 @@ const GameDetail = () => {
               <StarRating gameId={game.id} />
 
               {game.description && (
-                <p className="text-muted-foreground leading-relaxed max-w-2xl">
-                  {game.description}
-                </p>
+                <p className="text-muted-foreground leading-relaxed max-w-2xl">{game.description}</p>
               )}
 
-              <a href={game.download_link} target="_blank" rel="noopener noreferrer">
-                <Button className="gap-2 font-display tracking-wider mt-4" size="lg">
-                  <Download className="h-5 w-5" />
-                  DOWNLOAD
-                </Button>
-              </a>
+              <div className="flex items-center gap-3 pt-2">
+                <a href={game.download_link} target="_blank" rel="noopener noreferrer" onClick={handleDownload}>
+                  <Button className="gap-2 font-display tracking-wider" size="lg">
+                    <Download className="h-5 w-5" /> DOWNLOAD
+                  </Button>
+                </a>
+                {user && (
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => toggleFavorite.mutate(game.id)}
+                    className="gap-2 border-primary/30"
+                  >
+                    <Heart className={cn("h-5 w-5", isFavorite(game.id) ? "fill-red-500 text-red-500" : "")} />
+                    {isFavorite(game.id) ? "FAVORITADO" : "FAVORITAR"}
+                  </Button>
+                )}
+                {youtubeId && (
+                  <Button variant="outline" size="lg" onClick={() => setShowTrailer(!showTrailer)} className="gap-2 border-primary/30">
+                    <Play className="h-5 w-5" /> TRAILER
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Trailer embed */}
+      {showTrailer && youtubeId && (
+        <div className="container mx-auto px-4 pb-8">
+          <div className="aspect-video rounded-lg overflow-hidden border border-border max-w-3xl">
+            <iframe
+              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
+              title="Trailer"
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      )}
 
       {/* AI-detected info */}
       <div className="container mx-auto px-4 pb-16 space-y-10">
@@ -195,7 +211,6 @@ const GameDetail = () => {
           </div>
         ) : gameInfo && !(gameInfo as any).error ? (
           <>
-            {/* Game Info Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <InfoCard icon={<HardDrive className="h-5 w-5 text-primary" />} label="TAMANHO" value={gameInfo.file_size} />
               <InfoCard icon={<User className="h-5 w-5 text-primary" />} label="DESENVOLVEDOR" value={gameInfo.developer} />
@@ -203,49 +218,40 @@ const GameDetail = () => {
               <InfoCard icon={<Tag className="h-5 w-5 text-primary" />} label="ANO" value={String(gameInfo.release_year)} />
             </div>
 
-            {/* Full Description */}
             {gameInfo.description_full && (
-              <section>
+              <section className="animate-fade-in">
                 <h2 className="font-display text-lg font-bold tracking-wider text-foreground mb-3">SOBRE O JOGO</h2>
-                <p className="text-muted-foreground leading-relaxed max-w-3xl">
-                  {gameInfo.description_full}
-                </p>
+                <p className="text-muted-foreground leading-relaxed max-w-3xl">{gameInfo.description_full}</p>
               </section>
             )}
 
-            {/* Screenshots */}
             {gameInfo.screenshots && gameInfo.screenshots.length > 0 && (
               <section>
                 <h2 className="font-display text-lg font-bold tracking-wider text-foreground mb-4">SCREENSHOTS</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {gameInfo.screenshots.map((url, i) => (
-                    <div key={i} className="rounded-lg overflow-hidden border border-border">
-                      <img
-                        src={url}
-                        alt={`Screenshot ${i + 1}`}
-                        className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-                        onError={(e) => (e.currentTarget.style.display = "none")}
-                      />
+                    <div key={i} className="rounded-lg overflow-hidden border border-border opacity-0 animate-fade-in-up" style={{ animationDelay: `${i * 100}ms`, animationFillMode: "forwards" }}>
+                      <img src={url} alt={`Screenshot ${i + 1}`} className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300" onError={(e) => (e.currentTarget.style.display = "none")} />
                     </div>
                   ))}
                 </div>
               </section>
             )}
 
-            {/* System Requirements */}
             {gameInfo.requirements_min && (
               <section>
                 <h2 className="font-display text-lg font-bold tracking-wider text-foreground mb-4">REQUISITOS DO SISTEMA</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <RequirementsCard title="MÍNIMOS" reqs={gameInfo.requirements_min} />
-                  {gameInfo.requirements_rec && (
-                    <RequirementsCard title="RECOMENDADOS" reqs={gameInfo.requirements_rec} />
-                  )}
+                  {gameInfo.requirements_rec && <RequirementsCard title="RECOMENDADOS" reqs={gameInfo.requirements_rec} />}
                 </div>
               </section>
             )}
           </>
         ) : null}
+
+        {/* Comments Section */}
+        {id && <CommentSection gameId={id} />}
       </div>
     </div>
   );
