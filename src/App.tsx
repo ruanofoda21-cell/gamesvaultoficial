@@ -9,6 +9,8 @@ import NewGame from "./pages/NewGame.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import GameDetail from "./pages/GameDetail.tsx";
 import Suggestions from "./pages/Suggestions.tsx";
+import Profile from "./pages/Profile.tsx";
+import AdminDashboard from "./pages/AdminDashboard.tsx";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/novo" element={<NewGame />} />
           <Route path="/sugestoes" element={<Suggestions />} />
+          <Route path="/perfil" element={<Profile />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
