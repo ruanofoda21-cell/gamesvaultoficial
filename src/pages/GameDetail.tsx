@@ -13,7 +13,7 @@ import { ptBR } from "date-fns/locale";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+
 
 interface GameInfo {
   detected_title: string;
