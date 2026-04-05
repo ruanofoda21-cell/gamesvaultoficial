@@ -277,54 +277,7 @@ const Index = () => {
           </section>
         )}
 
-        {/* Compact Top 5 Ranking */}
-        {!search && !activeCategory && popularGames.length > 0 && (
-          <section className="neon-card rounded-xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-lg font-bold tracking-wider text-foreground flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-yellow-400" />
-                TOP 5 RANKING
-              </h2>
-              <Link to="/ranking">
-                <Button variant="ghost" size="sm" className="font-display text-xs tracking-wider text-primary">
-                  VER COMPLETO →
-                </Button>
-              </Link>
-            </div>
-            <div className="space-y-2">
-              {popularGames.slice(0, 5).map((game, i) => {
-                const r = allRatings?.reduce(
-                  (acc, cur) => {
-                    if (cur.game_id === game.id) { acc.sum += cur.rating; acc.count++; }
-                    return acc;
-                  },
-                  { sum: 0, count: 0 }
-                );
-                const avg = r && r.count > 0 ? (r.sum / r.count).toFixed(1) : "—";
-                const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`;
-                return (
-                  <Link
-                    key={game.id}
-                    to={`/jogo/${game.id}`}
-                    className="flex items-center gap-3 rounded-lg p-2.5 hover:bg-primary/10 transition-colors opacity-0 animate-fade-in-up"
-                    style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}
-                  >
-                    <span className="text-lg font-bold font-display w-8 text-center shrink-0">{medal}</span>
-                    <img
-                      src={game.image_url || "/placeholder.svg"}
-                      alt={game.title}
-                      className="h-10 w-10 rounded object-cover shrink-0"
-                    />
-                    <span className="font-display text-sm font-bold tracking-wider text-foreground truncate flex-1">
-                      {game.title}
-                    </span>
-                    <span className="text-sm font-bold text-primary shrink-0">{avg} ⭐</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-        )}
+
 
         {/* All Games / Filtered */}
         <section>
