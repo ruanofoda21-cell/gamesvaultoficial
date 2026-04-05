@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import StarRating from "@/components/StarRating";
 import CommentSection from "@/components/CommentSection";
 import GameBadge from "@/components/GameBadge";
-import { ArrowLeft, Download, HardDrive, Monitor, Cpu, MemoryStick, Loader2, Calendar, Tag, User, Building, Heart, Play } from "lucide-react";
+import { ArrowLeft, Download, HardDrive, Monitor, Cpu, MemoryStick, Loader2, Calendar, Tag, User, Building, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
@@ -13,7 +13,7 @@ import { ptBR } from "date-fns/locale";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+
 
 interface GameInfo {
   detected_title: string;
@@ -32,7 +32,7 @@ const GameDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const [showTrailer, setShowTrailer] = useState(false);
+  
 
   const { data: game, isLoading: gameLoading } = useQuery({
     queryKey: ["game", id],
@@ -80,11 +80,6 @@ const GameDetail = () => {
     }
   };
 
-  // Extract YouTube video ID from trailer_url
-  const getYouTubeId = (url: string) => {
-    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?#]+)/);
-    return match?.[1] || null;
-  };
 
   if (gameLoading) {
     return (
@@ -111,8 +106,6 @@ const GameDetail = () => {
 
   const isTorrent = game.title.includes("TORRENT");
   const cleanTitle = game.title.replace(/🟩TORRENT🟩/g, "").replace(/🟩/g, "").trim();
-  const trailerUrl = (game as any).trailer_url;
-  const youtubeId = trailerUrl ? getYouTubeId(trailerUrl) : null;
 
   return (
     <div className="min-h-screen">
@@ -176,31 +169,12 @@ const GameDetail = () => {
                     {isFavorite(game.id) ? "FAVORITADO" : "FAVORITAR"}
                   </Button>
                 )}
-                {youtubeId && (
-                  <Button variant="outline" size="lg" onClick={() => setShowTrailer(!showTrailer)} className="gap-2 border-primary/30">
-                    <Play className="h-5 w-5" /> TRAILER
-                  </Button>
-                )}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Trailer embed */}
-      {showTrailer && youtubeId && (
-        <div className="container mx-auto px-4 pb-8">
-          <div className="aspect-video rounded-lg overflow-hidden border border-border max-w-3xl">
-            <iframe
-              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
-              title="Trailer"
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        </div>
-      )}
 
       {/* AI-detected info */}
       <div className="container mx-auto px-4 pb-16 space-y-10">
