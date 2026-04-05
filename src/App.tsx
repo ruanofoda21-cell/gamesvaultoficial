@@ -30,6 +30,8 @@ const App = () => (
           <Route path="/sugestoes" element={<Suggestions />} />
           <Route path="/perfil" element={<Profile />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/ranking" element={<Ranking />} />
+          <Route path="/chat" element={<Chat />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

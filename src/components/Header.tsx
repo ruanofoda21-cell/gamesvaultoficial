@@ -1,4 +1,4 @@
-import { Gamepad2, Plus, LogIn, LogOut, MessageSquare, User, BarChart3 } from "lucide-react";
+import { Gamepad2, Plus, LogIn, LogOut, MessageSquare, User, BarChart3, Trophy, MessagesSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
