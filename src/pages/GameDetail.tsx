@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import StarRating from "@/components/StarRating";
 import CommentSection from "@/components/CommentSection";
 import GameBadge from "@/components/GameBadge";
-import { ArrowLeft, Download, HardDrive, Monitor, Cpu, MemoryStick, Loader2, Calendar, Tag, User, Building, Heart, Play } from "lucide-react";
+import { ArrowLeft, Download, HardDrive, Monitor, Cpu, MemoryStick, Loader2, Calendar, Tag, User, Building, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
