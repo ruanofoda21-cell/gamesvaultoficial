@@ -11,7 +11,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
 
 interface GameCardProps {
   game: Tables<"games">;
@@ -28,17 +27,6 @@ const GameCard = ({ game, isAdmin, onDelete, onEdit, index = 0 }: GameCardProps)
   const isTorrent = game.title.includes("TORRENT");
   const isNew = (Date.now() - new Date(game.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000;
 
-  const { data: downloadCount } = useQuery({
-    queryKey: ["download-count", game.id],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("download_counts")
-        .select("count")
-        .eq("game_id", game.id)
-        .maybeSingle();
-      return data?.count || 0;
-    },
-  });
 
   const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -102,17 +90,11 @@ const GameCard = ({ game, isAdmin, onDelete, onEdit, index = 0 }: GameCardProps)
             </p>
           )}
 
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               {format(new Date(game.created_at), "dd MMM yyyy", { locale: ptBR })}
             </span>
-            {(downloadCount ?? 0) > 0 && (
-              <span className="flex items-center gap-1">
-                <Download className="h-3 w-3" />
-                {downloadCount}
-              </span>
-            )}
           </div>
 
           <StarRating gameId={game.id} />
