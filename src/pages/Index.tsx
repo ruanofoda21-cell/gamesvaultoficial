@@ -6,10 +6,11 @@ import Header from "@/components/Header";
 import GameCard from "@/components/GameCard";
 import FeaturedCarousel from "@/components/FeaturedCarousel";
 import SkeletonCard from "@/components/SkeletonCard";
-import { Gamepad2, Search, Flame, Clock, TrendingUp } from "lucide-react";
+import { Gamepad2, Search, Flame, Clock, TrendingUp, Trophy } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 import type { Tables } from "@/integrations/supabase/types";
 
 const CATEGORIES = ["Ação", "RPG", "FPS", "Aventura", "Simulação", "Esporte", "Sobrevivência", "Terror", "Plataforma"];
