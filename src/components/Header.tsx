@@ -20,6 +20,16 @@ const Header = () => {
         </Link>
 
         <nav className="flex items-center gap-2">
+          <Link to="/ranking">
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+              <Trophy className="h-4 w-4" />
+            </Button>
+          </Link>
+          <Link to="/chat">
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+              <MessagesSquare className="h-4 w-4" />
+            </Button>
+          </Link>
           <ThemeToggle />
           {user ? (
             <>
