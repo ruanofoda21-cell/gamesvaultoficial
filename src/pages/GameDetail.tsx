@@ -204,6 +204,23 @@ const GameDetail = () => {
               <InfoCard icon={<Tag className="h-5 w-5 text-primary" />} label="ANO" value={String(gameInfo.release_year)} />
             </div>
 
+            {(gameInfo.platforms?.length || gameInfo.languages?.length || gameInfo.age_rating || gameInfo.genre) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {gameInfo.genre && <InfoCard icon={<Tag className="h-5 w-5 text-primary" />} label="GÊNERO" value={gameInfo.genre} />}
+                {gameInfo.platforms && gameInfo.platforms.length > 0 && (
+                  <InfoCard icon={<Monitor className="h-5 w-5 text-primary" />} label="PLATAFORMAS" value={gameInfo.platforms.join(", ")} />
+                )}
+                {gameInfo.languages && gameInfo.languages.length > 0 && (
+                  <InfoCard icon={<User className="h-5 w-5 text-primary" />} label="IDIOMAS" value={gameInfo.languages.join(", ")} />
+                )}
+                {gameInfo.age_rating && (
+                  <InfoCard icon={<Tag className="h-5 w-5 text-primary" />} label="CLASSIFICAÇÃO" value={gameInfo.age_rating} />
+                )}
+              </div>
+            )}
+
+
+
 
             {gameInfo.screenshots && gameInfo.screenshots.length > 0 && (
               <section>
