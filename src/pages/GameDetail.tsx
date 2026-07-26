@@ -24,6 +24,9 @@ interface GameInfo {
   file_size: string;
   description_full: string;
   screenshots: string[];
+  platforms?: string[];
+  languages?: string[];
+  age_rating?: string | null;
   requirements_min: { os: string; cpu: string; ram: string; gpu: string; storage: string };
   requirements_rec: { os: string; cpu: string; ram: string; gpu: string; storage: string };
 }
@@ -53,6 +56,9 @@ const GameDetail = () => {
           detected_title: dbData.detected_title, developer: dbData.developer, publisher: dbData.publisher,
           release_year: dbData.release_year, genre: dbData.genre, file_size: dbData.file_size,
           description_full: dbData.description_full, screenshots: dbData.screenshots || [],
+          platforms: (dbData as any).platforms || [],
+          languages: (dbData as any).languages || [],
+          age_rating: (dbData as any).age_rating || null,
           requirements_min: { os: dbData.req_min_os, cpu: dbData.req_min_cpu, ram: dbData.req_min_ram, gpu: dbData.req_min_gpu, storage: dbData.req_min_storage },
           requirements_rec: { os: dbData.req_rec_os, cpu: dbData.req_rec_cpu, ram: dbData.req_rec_ram, gpu: dbData.req_rec_gpu, storage: dbData.req_rec_storage },
         } as GameInfo;
@@ -67,6 +73,9 @@ const GameDetail = () => {
         detected_title: aiData.detected_title, developer: aiData.developer, publisher: aiData.publisher,
         release_year: aiData.release_year, genre: aiData.genre, file_size: aiData.file_size,
         description_full: aiData.description_full, screenshots: aiData.screenshots || [],
+        platforms: aiData.platforms || [],
+        languages: aiData.languages || [],
+        age_rating: aiData.age_rating || null,
         requirements_min: { os: aiData.req_min_os, cpu: aiData.req_min_cpu, ram: aiData.req_min_ram, gpu: aiData.req_min_gpu, storage: aiData.req_min_storage },
         requirements_rec: { os: aiData.req_rec_os, cpu: aiData.req_rec_cpu, ram: aiData.req_rec_ram, gpu: aiData.req_rec_gpu, storage: aiData.req_rec_storage },
       } as GameInfo;
@@ -134,13 +143,16 @@ const GameDetail = () => {
                 {isTorrent && <GameBadge type="torrent" />}
               </div>
 
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2">
                 {game.category && (
                   <Badge variant="outline" className="border-primary/30 text-primary font-display text-xs tracking-wider">
                     {game.category}
                   </Badge>
                 )}
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                {((game as any).badges as string[] | undefined)?.filter(b => b.toLowerCase() !== "torrent").map((b) => (
+                  <GameBadge key={b} label={b} />
+                ))}
+                <span className="text-xs text-muted-foreground flex items-center gap-1 ml-1">
                   <Calendar className="h-3 w-3" />
                   {format(new Date(game.created_at), "dd MMM yyyy", { locale: ptBR })}
                 </span>
@@ -192,12 +204,23 @@ const GameDetail = () => {
               <InfoCard icon={<Tag className="h-5 w-5 text-primary" />} label="ANO" value={String(gameInfo.release_year)} />
             </div>
 
-            {gameInfo.description_full && (
-              <section className="animate-fade-in">
-                <h2 className="font-display text-lg font-bold tracking-wider text-foreground mb-3">SOBRE O JOGO</h2>
-                <p className="text-muted-foreground leading-relaxed max-w-3xl">{gameInfo.description_full}</p>
-              </section>
+            {(gameInfo.platforms?.length || gameInfo.languages?.length || gameInfo.age_rating || gameInfo.genre) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {gameInfo.genre && <InfoCard icon={<Tag className="h-5 w-5 text-primary" />} label="GÊNERO" value={gameInfo.genre} />}
+                {gameInfo.platforms && gameInfo.platforms.length > 0 && (
+                  <InfoCard icon={<Monitor className="h-5 w-5 text-primary" />} label="PLATAFORMAS" value={gameInfo.platforms.join(", ")} />
+                )}
+                {gameInfo.languages && gameInfo.languages.length > 0 && (
+                  <InfoCard icon={<User className="h-5 w-5 text-primary" />} label="IDIOMAS" value={gameInfo.languages.join(", ")} />
+                )}
+                {gameInfo.age_rating && (
+                  <InfoCard icon={<Tag className="h-5 w-5 text-primary" />} label="CLASSIFICAÇÃO" value={gameInfo.age_rating} />
+                )}
+              </div>
             )}
+
+
+
 
             {gameInfo.screenshots && gameInfo.screenshots.length > 0 && (
               <section>

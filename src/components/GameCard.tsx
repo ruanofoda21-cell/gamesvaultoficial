@@ -1,4 +1,5 @@
 import { Download, Calendar, Trash2, Edit, Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,9 +25,12 @@ interface GameCardProps {
 const GameCard = ({ game, isAdmin, onDelete, onEdit, index = 0 }: GameCardProps) => {
   const { user } = useAuth();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const navigate = useNavigate();
 
-  const isTorrent = game.title.includes("TORRENT");
+  const gameBadges: string[] = ((game as any).badges as string[]) || [];
+  const isTorrent = game.title.includes("TORRENT") || gameBadges.some(b => b.toLowerCase() === "torrent");
   const isNew = (Date.now() - new Date(game.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000;
+  const extraBadges = gameBadges.filter(b => b.toLowerCase() !== "torrent");
 
   const { data: downloadCount } = useQuery({
     queryKey: ["download_count", game.id],
@@ -49,15 +53,16 @@ const GameCard = ({ game, isAdmin, onDelete, onEdit, index = 0 }: GameCardProps)
         className="neon-card rounded-lg overflow-hidden group opacity-0 animate-fade-in-up"
         style={{ animationDelay: `${index * 80}ms`, animationFillMode: "forwards" }}
       >
-        <div className="relative h-48 overflow-hidden">
+        <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
           {game.image_url ? (
             <img
               src={game.image_url}
               alt={game.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
             />
           ) : (
-            <div className="w-full h-full bg-muted flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-muted-foreground text-sm">Sem imagem</span>
             </div>
           )}
@@ -98,6 +103,17 @@ const GameCard = ({ game, isAdmin, onDelete, onEdit, index = 0 }: GameCardProps)
             </p>
           )}
 
+          {extraBadges.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {extraBadges.slice(0, 4).map((b) => (
+                <GameBadge key={b} label={b} />
+              ))}
+              {extraBadges.length > 4 && (
+                <span className="text-[10px] text-muted-foreground font-display">+{extraBadges.length - 4}</span>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center text-xs text-muted-foreground gap-3">
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
@@ -121,7 +137,7 @@ const GameCard = ({ game, isAdmin, onDelete, onEdit, index = 0 }: GameCardProps)
 
             {isAdmin && (
               <>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-accent" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit?.(game); }}>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-accent" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit ? onEdit(game) : navigate(`/editar/${game.id}`); }}>
                   <Edit className="h-4 w-4" />
                 </Button>
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete?.(game.id); }}>
