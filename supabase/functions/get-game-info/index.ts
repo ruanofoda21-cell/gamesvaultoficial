@@ -77,20 +77,29 @@ serve(async (req) => {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "google/gemini-2.5-pro",
         messages: [
           {
             role: "system",
-            content: `You are a gaming encyclopedia. Given a game title, identify the game and return ONLY a valid JSON object (no markdown, no code blocks) with this structure:
-{"detected_title":"string","developer":"string","publisher":"string","release_year":number,"genre":"string","file_size":"string","description_full":"A 2-3 sentence description in Portuguese BR","screenshots":["url1","url2","url3"],"req_min_os":"string","req_min_cpu":"string","req_min_ram":"string","req_min_gpu":"string","req_min_storage":"string","req_rec_os":"string","req_rec_cpu":"string","req_rec_ram":"string","req_rec_gpu":"string","req_rec_storage":"string"}
-For screenshots use real Steam CDN URLs if known, otherwise empty array. Return ONLY raw JSON.`
+            content: `You are a meticulous video-game database expert. Given a game title, identify the exact game and return ONLY a valid JSON object (no markdown, no code fences, no commentary) with this EXACT structure:
+{"detected_title":"string","developer":"string","publisher":"string","release_year":number,"genre":"string","file_size":"string like '45 GB'","description_full":"A 2-3 sentence description in Portuguese BR","screenshots":["url1","url2","url3"],"platforms":["PC","PlayStation 5","Xbox Series X","Nintendo Switch"],"languages":["Português","Inglês","Espanhol"],"age_rating":"string like '18+' or 'Livre' (ESRB/PEGI/ClassInd, prefer Brazilian ClassInd when known, else null)","req_min_os":"string","req_min_cpu":"string","req_min_ram":"string","req_min_gpu":"string","req_min_storage":"string","req_rec_os":"string","req_rec_cpu":"string","req_rec_ram":"string","req_rec_gpu":"string","req_rec_storage":"string"}
+
+Rules:
+- Base your answers on publicly known facts from Steam, official pages, Wikipedia, PCGamingWiki. Never invent.
+- If a field is genuinely unknown, use an empty string "" (or 0 for release_year, [] for arrays, null for age_rating). Never write "N/A" or "Unknown".
+- Requirements must be REAL published specs, not generic guesses. If real specs exist only for minimum, still fill recommended with the best-known values or repeat minimum.
+- file_size should reflect the installed size on PC (e.g. "70 GB").
+- platforms must list every platform the game officially released on.
+- languages must list supported interface/dubbing languages, in Portuguese.
+- screenshots: 3 to 5 real Steam CDN URLs (https://cdn.cloudflare.steamstatic.com/steam/apps/<appid>/ss_*.jpg). If unknown, return [].
+- Return ONLY the raw JSON object, nothing else.`
           },
           {
             role: "user",
-            content: `Game title: "${cleanTitle}"${description ? `\nDescription: "${description}"` : ""}`
+            content: `Game title: "${cleanTitle}"${description ? `\nUser-provided context: "${description}"` : ""}`
           }
         ],
-        temperature: 0.3,
+        temperature: 0.2,
       }),
     });
 
