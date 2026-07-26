@@ -138,6 +138,7 @@ export type Database = {
       }
       game_info: {
         Row: {
+          age_rating: string | null
           created_at: string
           description_full: string | null
           detected_title: string | null
@@ -146,6 +147,8 @@ export type Database = {
           game_id: string
           genre: string | null
           id: string
+          languages: string[]
+          platforms: string[]
           publisher: string | null
           release_year: number | null
           req_min_cpu: string | null
@@ -161,6 +164,7 @@ export type Database = {
           screenshots: string[] | null
         }
         Insert: {
+          age_rating?: string | null
           created_at?: string
           description_full?: string | null
           detected_title?: string | null
@@ -169,6 +173,8 @@ export type Database = {
           game_id: string
           genre?: string | null
           id?: string
+          languages?: string[]
+          platforms?: string[]
           publisher?: string | null
           release_year?: number | null
           req_min_cpu?: string | null
@@ -184,6 +190,7 @@ export type Database = {
           screenshots?: string[] | null
         }
         Update: {
+          age_rating?: string | null
           created_at?: string
           description_full?: string | null
           detected_title?: string | null
@@ -192,6 +199,8 @@ export type Database = {
           game_id?: string
           genre?: string | null
           id?: string
+          languages?: string[]
+          platforms?: string[]
           publisher?: string | null
           release_year?: number | null
           req_min_cpu?: string | null
@@ -218,6 +227,7 @@ export type Database = {
       }
       games: {
         Row: {
+          badges: string[]
           category: string | null
           created_at: string
           description: string | null
@@ -229,6 +239,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          badges?: string[]
           category?: string | null
           created_at?: string
           description?: string | null
@@ -240,6 +251,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          badges?: string[]
           category?: string | null
           created_at?: string
           description?: string | null
