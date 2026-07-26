@@ -134,13 +134,16 @@ const GameDetail = () => {
                 {isTorrent && <GameBadge type="torrent" />}
               </div>
 
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2">
                 {game.category && (
                   <Badge variant="outline" className="border-primary/30 text-primary font-display text-xs tracking-wider">
                     {game.category}
                   </Badge>
                 )}
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                {((game as any).badges as string[] | undefined)?.filter(b => b.toLowerCase() !== "torrent").map((b) => (
+                  <GameBadge key={b} label={b} />
+                ))}
+                <span className="text-xs text-muted-foreground flex items-center gap-1 ml-1">
                   <Calendar className="h-3 w-3" />
                   {format(new Date(game.created_at), "dd MMM yyyy", { locale: ptBR })}
                 </span>
