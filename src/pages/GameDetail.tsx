@@ -192,12 +192,6 @@ const GameDetail = () => {
               <InfoCard icon={<Tag className="h-5 w-5 text-primary" />} label="ANO" value={String(gameInfo.release_year)} />
             </div>
 
-            {gameInfo.description_full && (
-              <section className="animate-fade-in">
-                <h2 className="font-display text-lg font-bold tracking-wider text-foreground mb-3">SOBRE O JOGO</h2>
-                <p className="text-muted-foreground leading-relaxed max-w-3xl">{gameInfo.description_full}</p>
-              </section>
-            )}
 
             {gameInfo.screenshots && gameInfo.screenshots.length > 0 && (
               <section>
