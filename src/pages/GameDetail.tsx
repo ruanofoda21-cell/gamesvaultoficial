@@ -24,6 +24,9 @@ interface GameInfo {
   file_size: string;
   description_full: string;
   screenshots: string[];
+  platforms?: string[];
+  languages?: string[];
+  age_rating?: string | null;
   requirements_min: { os: string; cpu: string; ram: string; gpu: string; storage: string };
   requirements_rec: { os: string; cpu: string; ram: string; gpu: string; storage: string };
 }
@@ -53,6 +56,9 @@ const GameDetail = () => {
           detected_title: dbData.detected_title, developer: dbData.developer, publisher: dbData.publisher,
           release_year: dbData.release_year, genre: dbData.genre, file_size: dbData.file_size,
           description_full: dbData.description_full, screenshots: dbData.screenshots || [],
+          platforms: (dbData as any).platforms || [],
+          languages: (dbData as any).languages || [],
+          age_rating: (dbData as any).age_rating || null,
           requirements_min: { os: dbData.req_min_os, cpu: dbData.req_min_cpu, ram: dbData.req_min_ram, gpu: dbData.req_min_gpu, storage: dbData.req_min_storage },
           requirements_rec: { os: dbData.req_rec_os, cpu: dbData.req_rec_cpu, ram: dbData.req_rec_ram, gpu: dbData.req_rec_gpu, storage: dbData.req_rec_storage },
         } as GameInfo;
@@ -67,6 +73,9 @@ const GameDetail = () => {
         detected_title: aiData.detected_title, developer: aiData.developer, publisher: aiData.publisher,
         release_year: aiData.release_year, genre: aiData.genre, file_size: aiData.file_size,
         description_full: aiData.description_full, screenshots: aiData.screenshots || [],
+        platforms: aiData.platforms || [],
+        languages: aiData.languages || [],
+        age_rating: aiData.age_rating || null,
         requirements_min: { os: aiData.req_min_os, cpu: aiData.req_min_cpu, ram: aiData.req_min_ram, gpu: aiData.req_min_gpu, storage: aiData.req_min_storage },
         requirements_rec: { os: aiData.req_rec_os, cpu: aiData.req_rec_cpu, ram: aiData.req_rec_ram, gpu: aiData.req_rec_gpu, storage: aiData.req_rec_storage },
       } as GameInfo;
