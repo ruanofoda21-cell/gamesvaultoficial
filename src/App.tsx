@@ -27,6 +27,7 @@ const App = () => (
           <Route path="/jogo/:id" element={<GameDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/novo" element={<NewGame />} />
+          <Route path="/editar/:id" element={<NewGame />} />
           <Route path="/sugestoes" element={<Suggestions />} />
           <Route path="/perfil" element={<Profile />} />
           <Route path="/admin" element={<AdminDashboard />} />
