@@ -6,6 +6,7 @@ const Router = typeof window !== "undefined" && window.location.protocol === "fi
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import Layout from "@/components/Layout";
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login.tsx";
 import NewGame from "./pages/NewGame.tsx";
@@ -16,8 +17,34 @@ import Profile from "./pages/Profile.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import Ranking from "./pages/Ranking.tsx";
 import Chat from "./pages/Chat.tsx";
+import { useLocation } from "react-router-dom";
 
 const queryClient = new QueryClient();
+
+// Wrap non-Index routes with Layout. Index already includes Layout itself so it controls the search prop.
+const WithLayout = ({ children }: { children: React.ReactNode }) => {
+  const { pathname } = useLocation();
+  if (pathname === "/" || pathname === "/login") return <>{children}</>;
+  return <Layout>{children}</Layout>;
+};
+
+const AppRoutes = () => (
+  <WithLayout>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/jogo/:id" element={<GameDetail />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/novo" element={<NewGame />} />
+      <Route path="/editar/:id" element={<NewGame />} />
+      <Route path="/sugestoes" element={<Suggestions />} />
+      <Route path="/perfil" element={<Profile />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/ranking" element={<Ranking />} />
+      <Route path="/chat" element={<Chat />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </WithLayout>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -25,19 +52,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <Router>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/jogo/:id" element={<GameDetail />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/novo" element={<NewGame />} />
-          <Route path="/editar/:id" element={<NewGame />} />
-          <Route path="/sugestoes" element={<Suggestions />} />
-          <Route path="/perfil" element={<Profile />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/ranking" element={<Ranking />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AppRoutes />
       </Router>
     </TooltipProvider>
   </QueryClientProvider>
