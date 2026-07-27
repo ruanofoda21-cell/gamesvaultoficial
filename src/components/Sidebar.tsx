@@ -32,7 +32,7 @@ const Sidebar = () => {
   });
 
   const library = useMemo(() => {
-    const favIds = new Set(favorites?.map((f: any) => f.game_id) || []);
+    const favIds = new Set(favorites || []);
     const favGames = (games || []).filter((g) => favIds.has(g.id));
     return favGames.filter((g) => g.title.toLowerCase().includes(filter.toLowerCase()));
   }, [games, favorites, filter]);
