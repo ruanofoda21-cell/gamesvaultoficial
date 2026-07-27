@@ -59,7 +59,7 @@ const GameCard = ({ game, isAdmin, onDelete, onEdit, index = 0 }: GameCardProps)
               src={game.image_url}
               alt={game.title}
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+              className="absolute inset-0 w-full h-full object-fill transition-transform duration-500 group-hover:scale-110"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
