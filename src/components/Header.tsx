@@ -22,7 +22,7 @@ const Header = () => {
 
         <nav className="flex items-center gap-2">
           <a
-            href={gameVaultWindowsAsset.url}
+            href={`https://gamesvaultoficial.lovable.app${gameVaultWindowsAsset.url}`}
             target="_blank"
             rel="noopener noreferrer"
             title="Baixar app para Windows (ZIP ~156 MB)"
