@@ -13,8 +13,8 @@ export default {
       },
     },
     fontFamily: {
-        display: ['Inter', 'system-ui', 'sans-serif'],
-        body: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Orbitron', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
       },
     extend: {
       colors: {
