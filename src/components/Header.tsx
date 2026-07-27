@@ -23,8 +23,9 @@ const Header = () => {
         <nav className="flex items-center gap-2">
           <a
             href={gameVaultWindowsAsset.url}
-            download="GameVault-Windows.zip"
-            title="Baixar app para Windows (ZIP ~139 MB)"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Baixar app para Windows (ZIP ~156 MB)"
           >
             <Button
               variant="outline"
