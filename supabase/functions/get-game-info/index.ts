@@ -132,6 +132,23 @@ Rules:
 
     const parsed = extractJson(content) as Record<string, any>;
 
+    // Fetch REAL screenshots from Steam (AI hallucinates URLs)
+    let steamShots: string[] = [];
+    try {
+      const searchTerm = encodeURIComponent(parsed.detected_title || cleanTitle);
+      const searchRes = await fetch(`https://store.steampowered.com/api/storesearch/?term=${searchTerm}&cc=us&l=en`);
+      const searchData = await searchRes.json();
+      const appid = searchData?.items?.[0]?.id;
+      if (appid) {
+        const detailsRes = await fetch(`https://store.steampowered.com/api/appdetails?appids=${appid}&l=en`);
+        const detailsData = await detailsRes.json();
+        const shots = detailsData?.[appid]?.data?.screenshots || [];
+        steamShots = shots.slice(0, 5).map((s: any) => s.path_full).filter(Boolean);
+      }
+    } catch (e) {
+      console.error("Steam fetch failed:", (e as Error).message);
+    }
+
     // Save to DB
     const row = {
       game_id,
@@ -142,10 +159,11 @@ Rules:
       genre: parsed.genre || "",
       file_size: parsed.file_size || "",
       description_full: parsed.description_full || "",
-      screenshots: parsed.screenshots || [],
+      screenshots: steamShots.length > 0 ? steamShots : (parsed.screenshots || []),
       platforms: parsed.platforms || [],
       languages: parsed.languages || [],
       age_rating: parsed.age_rating || null,
+
       req_min_os: parsed.req_min_os || parsed.requirements_min?.os || "",
       req_min_cpu: parsed.req_min_cpu || parsed.requirements_min?.cpu || "",
       req_min_ram: parsed.req_min_ram || parsed.requirements_min?.ram || "",
