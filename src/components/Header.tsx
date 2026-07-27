@@ -1,9 +1,10 @@
-import { Gamepad2, Plus, LogIn, LogOut, MessageSquare, User, BarChart3, Trophy, MessagesSquare } from "lucide-react";
+import { Gamepad2, Plus, LogIn, LogOut, MessageSquare, User, BarChart3, Trophy, MessagesSquare, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import SuggestionDialog from "@/components/SuggestionDialog";
 import ThemeToggle from "@/components/ThemeToggle";
+import gameVaultWindowsAsset from "@/assets/gamevault-windows.zip.asset.json";
 
 const Header = () => {
   const { user, signOut } = useAuth();
@@ -20,6 +21,20 @@ const Header = () => {
         </Link>
 
         <nav className="flex items-center gap-2">
+          <a
+            href={gameVaultWindowsAsset.url}
+            download="GameVault-Windows.zip"
+            title="Baixar app para Windows (ZIP ~139 MB)"
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 font-display text-xs tracking-wider border-primary/40 hover:border-primary hover:bg-primary/10 neon-glow"
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">BAIXAR APP</span>
+            </Button>
+          </a>
           <Link to="/ranking">
             <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
               <Trophy className="h-4 w-4" />
