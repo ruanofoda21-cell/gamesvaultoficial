@@ -27,7 +27,9 @@ const queryClient = new QueryClient();
 // Web keeps the original neon layout where each page renders its own <Header />.
 const DesktopShell = ({ children }: { children: React.ReactNode }) => {
   const { pathname } = useLocation();
-  if (pathname === "/login") return <>{children}</>;
+  // "/" (IndexDesktop) renders its own Layout so it can drive the search input.
+  // "/login" is a standalone screen without the sidebar.
+  if (pathname === "/" || pathname === "/login") return <>{children}</>;
   return <Layout>{children}</Layout>;
 };
 
