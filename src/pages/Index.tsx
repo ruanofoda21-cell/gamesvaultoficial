@@ -35,7 +35,7 @@ const Index = () => {
       const { data, error } = await supabase
         .from("games")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("title", { ascending: false });
       if (error) throw error;
       return data;
     },
