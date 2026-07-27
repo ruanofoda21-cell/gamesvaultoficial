@@ -156,7 +156,7 @@ const Sidebar = () => {
       {/* Footer */}
       <div className="p-3 border-t border-sidebar-border space-y-2">
         <a
-          href={gameVaultWindowsAsset.url}
+          href={`https://gamesvaultoficial.lovable.app${gameVaultWindowsAsset.url}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 px-3 py-2 rounded-md text-xs text-sidebar-foreground bg-sidebar-accent/40 hover:bg-sidebar-accent transition-colors"
