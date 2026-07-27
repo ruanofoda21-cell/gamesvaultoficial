@@ -30,7 +30,7 @@ const TopBar = ({ search, onSearchChange }: TopBarProps) => {
     <div className="sticky top-0 z-40 h-14 flex items-center gap-3 px-6 border-b border-border bg-background/80 backdrop-blur-md">
       <button
         onClick={() => navigate(-1)}
-        className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-surface-3 transition-colors"
+        className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
         aria-label="Voltar"
       >
         <ArrowLeft className="h-4 w-4" />
