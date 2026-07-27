@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Hydra-inspired dark palette */
+    --background: 240 6% 7%;         /* app bg */
+    --foreground: 0 0% 96%;
+
+    --surface: 240 6% 10%;           /* sidebar bg */
+    --surface-2: 240 5% 13%;         /* cards */
+    --surface-3: 240 5% 17%;         /* hover */
+
+    --card: 240 5% 11%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 240 6% 10%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 265 85% 66%;          /* hydra purple accent */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 5% 15%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 240 5% 14%;
+    --muted-foreground: 240 5% 60%;
+
+    --accent: 265 85% 66%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 5% 18%;
+    --input: 240 5% 16%;
+    --ring: 265 85% 66%;
+
+    --radius: 0.5rem;
+
+    --neon-glow: 265 85% 66%;
+    --neon-purple: 265 85% 66%;
+    --neon-green: 145 60% 50%;
+
+    --sidebar-background: 240 6% 9%;
+    --sidebar-foreground: 240 5% 75%;
+    --sidebar-primary: 265 85% 66%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 14%;
+    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-border: 240 5% 15%;
+    --sidebar-ring: 265 85% 66%;
+  }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 240 10% 10%;
+    --surface: 0 0% 100%;
+    --surface-2: 0 0% 97%;
+    --surface-3: 0 0% 94%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
+    --primary: 265 85% 56%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 94%;
+    --secondary-foreground: 240 10% 25%;
+    --muted: 240 5% 95%;
+    --muted-foreground: 240 5% 45%;
+    --accent: 265 85% 56%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 5% 88%;
+    --input: 240 5% 88%;
+    --ring: 265 85% 56%;
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 240 10% 30%;
+    --sidebar-primary: 265 85% 56%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 92%;
+    --sidebar-accent-foreground: 240 10% 10%;
+    --sidebar-border: 240 5% 88%;
+    --sidebar-ring: 265 85% 56%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  h1, h2, h3, h4, h5, h6 { @apply font-display; letter-spacing: -0.01em; }
+}
+
+@layer utilities {
+  .neon-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    transition: all 0.2s ease;
+  }
+  .neon-card:hover {
+    border-color: hsl(var(--border));
+    background: hsl(var(--surface-3));
+    transform: translateY(-1px);
+  }
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .glassmorphism {
+    background: hsl(var(--surface) / 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--border) / 0.6);
+  }
+  .hero-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.08), transparent 60%);
+  }
+  .neon-text { color: hsl(var(--foreground)); }
+  .neon-border { border: 1px solid hsl(var(--border)); }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .animate-gradient { background-size: 200% 200%; animation: gradient-shift 8s ease infinite; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .animate-float { animation: float 3s ease-in-out infinite; }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--surface-3)); }
+}
+
+#lovable-badge { display: none !important; }
