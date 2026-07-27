@@ -157,7 +157,8 @@ const Sidebar = () => {
       <div className="p-3 border-t border-sidebar-border space-y-2">
         <a
           href={gameVaultWindowsAsset.url}
-          download="GameVault-Windows.zip"
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center gap-2 px-3 py-2 rounded-md text-xs text-sidebar-foreground bg-sidebar-accent/40 hover:bg-sidebar-accent transition-colors"
         >
           <Download className="h-4 w-4 text-primary" />
