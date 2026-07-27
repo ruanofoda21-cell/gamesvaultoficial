@@ -83,11 +83,18 @@ const GameDetail = () => {
     enabled: !!id && !gameLoading,
   });
 
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const api = (window as any).electronAPI;
+    if (api?.openDownload && game?.download_link) {
+      e.preventDefault();
+      api.openDownload(game.download_link);
+      toast.success("Abrindo download no app…");
+    }
     if (id) {
       try { await supabase.rpc("increment_download", { p_game_id: id }); } catch {}
     }
   };
+
 
 
   if (gameLoading) {
