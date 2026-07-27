@@ -13,6 +13,8 @@ import { ptBR } from "date-fns/locale";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+
 
 
 interface GameInfo {
@@ -83,11 +85,18 @@ const GameDetail = () => {
     enabled: !!id && !gameLoading,
   });
 
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const api = (window as any).electronAPI;
+    if (api?.openDownload && game?.download_link) {
+      e.preventDefault();
+      api.openDownload(game.download_link);
+      toast.success("Abrindo download no app…");
+    }
     if (id) {
       try { await supabase.rpc("increment_download", { p_game_id: id }); } catch {}
     }
   };
+
 
 
   if (gameLoading) {
